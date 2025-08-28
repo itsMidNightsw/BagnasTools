@@ -66,16 +66,16 @@ varImpPlot(rfpa, main = "Relative importance of the bands in the Random Forest c
 
 
 
-RFDoTrace <- randomForest(pre_abs~., ntree = 500,data=train, proximity=TRUE,
-                          do.trace = 10, na.action = na.omit)
+#RFDoTrace <- randomForest(pre_abs~., ntree = 500,data=train, proximity=TRUE,
+#                          do.trace = 10, na.action = na.omit)
 
 
 
-plot(RFDoTrace)
-legend("topright", "try")
-plot(rfpa)
+#plot(RFDoTrace)
+#legend("topright", "try")
+#plot(rfpa)
 
-reprtree:::plot.getTree(rfpa, k = 1, depth = 5, cex = 1)
+#reprtree:::plot.getTree(rfpa, k = 1, depth = 5, cex = 1)
 #treetest = getTree(rfpa, k = 1)
 #partialPlot(rfpa, x.var = pir, pred.data = test)
 #MDSplot(rfpa, fac = pre_abs)

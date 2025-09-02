@@ -17,14 +17,14 @@ classify_simple_image = function(date, data_path, export, export_dir_raster, exp
   library(raster)
   library(terra)
   
-  #prerequest = une image, la date de l'image, un obj random forest, les differents shapefiles
+  #necessite une image, la date de l'image, un obj random forest, les differents shapefiles
   
-  wd=getwd()
+  wd=paste(getwd(),"/Images_S2", sep = "")
   
   print(date)
   
-  imagery=dir(data_path, pattern="V", full.names = F)  #nom des dossiers d'accés aux images brutes
-  imagery_fullnames=dir(data_path, pattern="V", full.names = T)
+  imagery=dir(data_path, pattern="T31", full.names = F)  #nom des dossiers d'accés aux images brutes
+  imagery_fullnames=dir(data_path, pattern="T31", full.names = T)
   
   #'Lire les shapefiles zone d'étude
   

@@ -180,3 +180,17 @@ for (date in dates_ordered_2023) {
   
 }
 
+
+
+
+
+
+
+
+############ test ##############
+
+
+data_path_test = paste(getwd(),"/Images_S2", sep = "")
+date = 20250811
+
+

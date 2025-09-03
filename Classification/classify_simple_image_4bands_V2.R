@@ -19,7 +19,7 @@ classify_simple_image = function(date, data_path, export, export_dir_raster, exp
   
   #necessite une image, la date de l'image, un obj random forest, les differents shapefiles
   
-  wd=paste(getwd(),"/Images_S2", sep = "")
+  #wd=paste(getwd(),"/Images_S2", sep = "")
   
   print(date)
   
@@ -58,29 +58,37 @@ classify_simple_image = function(date, data_path, export, export_dir_raster, exp
   
   
   
-  
+  ## find the sub directory
   
   name=paste(date,"stack", sep="_")
-  files = dir(data_path, pattern=date, full.names = T)
+  files = dir(data_path, pattern=as.character(date), full.names = T)
   file = files[1]
   DATA_path<-file.path(file)
+  
+  subdir = dir(paste(DATA_path, "/GRANULE", sep = ""))
+  
+  fullpath = paste(DATA_path, "/GRANULE/", subdir, "/IMG_DATA/R10m", sep = "")
+  
   
   
   
   #' Concaténation des bandes et découpage de la zone
-  filenameB2=file.path(DATA_path,dir(DATA_path, pattern="FRE_B2"))
+  filenameB2=file.path(fullpath,dir(fullpath, pattern="B02"))
   B2=raster(filenameB2[1])
-  filenameB3=file.path(DATA_path,dir(DATA_path, pattern="FRE_B3"))
+  filenameB3=file.path(fullpath,dir(fullpath, pattern="B03"))
   B3=raster(filenameB3[1])
-  filenameB4=file.path(DATA_path,dir(DATA_path, pattern="FRE_B4"))
+  filenameB4=file.path(fullpath,dir(fullpath, pattern="B04"))
   B4=raster(filenameB4[1])
-  filenameB8=file.path(DATA_path,dir(DATA_path, pattern="FRE_B8"))
+  filenameB8=file.path(fullpath,dir(fullpath, pattern="B08"))
   B8=raster(filenameB8[1]) #sélection du premier B8 et pas B8A
   stack<-addLayer(B2,B3,B4,B8)
   
   data<-crop(stack,emprise)
   
   names(data)<-c("bleu", "vert", "rouge", "pir")
+  
+  
+  
   
   
   #' Passer en réflectance
@@ -111,8 +119,7 @@ classify_simple_image = function(date, data_path, export, export_dir_raster, exp
   #raster::plot(grand_bagnas_lambert93, add = T)
   
   
-  
-  library(raster)
+
   #dvi_extract = raster::extract(dvi, grand_bagnas, cellnumber = T, df = T)
   bleu_extract = raster::extract(bleu, pxlpoints, cellnumber = T ,df = T)
   cell = bleu_extract$cell
@@ -161,11 +168,11 @@ classify_simple_image = function(date, data_path, export, export_dir_raster, exp
   xyzfile$pre_abs = ifelse(xyzfile$pre_abs=="pre", 1, 0)
   xyzraster <- rasterFromXYZ(xyzfile)  #Convert first two columns as lon-lat and third as value        
   #xyzraster
-  raster::plot(xyzraster, legend = F)
-  raster::plot(masque_roseliere, add = T, legend = F)
+  raster::plot(xyzraster, col = "darkgreen", legend = F)
+  raster::plot(masque_roseliere, add = T, col = "gray", legend = F)
   #legend("topleft", legend = date)
   legend("bottomright", inset=.02, title=date,
-         c("herbier", "roseliere"), fill=c("chartreuse3", "yellow"), horiz=F, cex=1)
+         c("herbier", "roseliere"), fill=c("darkgreen", "gray"), horiz=F, cex=1)
   
   
   
@@ -178,11 +185,11 @@ classify_simple_image = function(date, data_path, export, export_dir_raster, exp
     raster::writeRaster(xyzraster, format = "GTiff", filename = paste(exp_file, date, sep = "/"))
     
     png(file = paste(export_dir_png, date, ".png", sep = ""), width = 700, height = 550)
-    raster::plot(xyzraster, legend = F)
-    raster::plot(masque_roseliere, add = T, legend = F)
+    raster::plot(xyzraster, col = "darkgreen", legend = F)
+    raster::plot(masque_roseliere, add = T, col = "gray", legend = F)
     #legend("topleft", legend = date)
     legend("bottomright", inset=.02, title=date,
-           c("herbier", "roseliere"), fill=c("chartreuse3", "yellow"), horiz=F, cex=1)
+           c("herbier", "roseliere"), fill=c("darkgreen", "gray"), horiz=F, cex=1)
     dev.off()
   }
 }

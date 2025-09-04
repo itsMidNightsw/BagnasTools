@@ -168,7 +168,7 @@ classify_simple_image = function(date, data_path, export, export_dir_raster, exp
   xyzfile$pre_abs = ifelse(xyzfile$pre_abs=="pre", 1, 0)
   xyzraster <- rasterFromXYZ(xyzfile)  #Convert first two columns as lon-lat and third as value        
   #xyzraster
-  raster::plot(xyzraster, col = "darkgreen", legend = F)
+  raster::plot(xyzraster, col = c("white","darkgreen"), legend = F)
   raster::plot(masque_roseliere, add = T, col = "gray", legend = F)
   #legend("topleft", legend = date)
   legend("bottomright", inset=.02, title=date,
@@ -185,7 +185,7 @@ classify_simple_image = function(date, data_path, export, export_dir_raster, exp
     raster::writeRaster(xyzraster, format = "GTiff", filename = paste(exp_file, date, sep = "/"))
     
     png(file = paste(export_dir_png, date, ".png", sep = ""), width = 700, height = 550)
-    raster::plot(xyzraster, col = "darkgreen", legend = F)
+    raster::plot(xyzraster, col = c("white","darkgreen"), legend = F)
     raster::plot(masque_roseliere, add = T, col = "gray", legend = F)
     #legend("topleft", legend = date)
     legend("bottomright", inset=.02, title=date,

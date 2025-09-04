@@ -1,5 +1,3 @@
-#classify_simple_image_4bands.r
-
 
 
 classify_simple_image = function(date, data_path, export, export_dir_raster, export_dir_png){
@@ -65,28 +63,22 @@ classify_simple_image = function(date, data_path, export, export_dir_raster, exp
   file = files[1]
   DATA_path<-file.path(file)
   
-  subdir = dir(paste(DATA_path, "/GRANULE", sep = ""))
-  
-  fullpath = paste(DATA_path, "/GRANULE/", subdir, "/IMG_DATA/R10m", sep = "")
-  
-  
   
   
   #' Concaténation des bandes et découpage de la zone
-  filenameB2=file.path(fullpath,dir(fullpath, pattern="B02"))
+  filenameB2=file.path(DATA_path,dir(DATA_path, pattern="FRE_B2"))
   B2=raster(filenameB2[1])
-  filenameB3=file.path(fullpath,dir(fullpath, pattern="B03"))
+  filenameB3=file.path(DATA_path,dir(DATA_path, pattern="FRE_B3"))
   B3=raster(filenameB3[1])
-  filenameB4=file.path(fullpath,dir(fullpath, pattern="B04"))
+  filenameB4=file.path(DATA_path,dir(DATA_path, pattern="FRE_B4"))
   B4=raster(filenameB4[1])
-  filenameB8=file.path(fullpath,dir(fullpath, pattern="B08"))
+  filenameB8=file.path(DATA_path,dir(DATA_path, pattern="FRE_B8"))
   B8=raster(filenameB8[1]) #sélection du premier B8 et pas B8A
   stack<-addLayer(B2,B3,B4,B8)
   
   data<-crop(stack,emprise)
   
   names(data)<-c("bleu", "vert", "rouge", "pir")
-  
   
   
   
@@ -119,7 +111,7 @@ classify_simple_image = function(date, data_path, export, export_dir_raster, exp
   #raster::plot(grand_bagnas_lambert93, add = T)
   
   
-
+  
   #dvi_extract = raster::extract(dvi, grand_bagnas, cellnumber = T, df = T)
   bleu_extract = raster::extract(bleu, pxlpoints, cellnumber = T ,df = T)
   cell = bleu_extract$cell

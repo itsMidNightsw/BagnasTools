@@ -3,10 +3,7 @@
 classify_simple_image = function(date, data_path, export, export_dir_raster, export_dir_png){
   
   library(sp)
-  #library(rgdal)
   library(RStoolbox)
-  #library(hsdar)
-  #library(maptools)
   library(matrixStats)
   library(Hmisc)
   library(htmlwidgets)
@@ -17,7 +14,6 @@ classify_simple_image = function(date, data_path, export, export_dir_raster, exp
   
   #necessite une image, la date de l'image, un obj random forest, les differents shapefiles
   
-  #wd=paste(getwd(),"/Images_S2", sep = "")
   
   print(date)
   
@@ -31,13 +27,7 @@ classify_simple_image = function(date, data_path, export, export_dir_raster, exp
   grand_bagnas=shapefile(paste(getwd(),"/Data/Couches_Bagnas/grand_bagnas.shp", sep = "")) #shapefile lagune grand bagnas 
   masque_roseliere = raster(paste(getwd(),"/Data/mask_bagnas/mask_lagune.tif", sep = ""))
   
-  
-  #lagune_elargie_lambert93 = spTransform(lagune_elargie, CRS("+init=epsg:2154"))
-  #grand_bagnas_lambert93 = spTransform(grand_bagnas, CRS("+init=epsg:2154"))
-  #masque_roseliere_lambert93 = projectRaster(masque_roseliere, crs="+init=epsg:2154", method = "ngb")
-  
-  
-  #masque_roseliere_lambert93 = round(masque_roseliere_lambert93)
+
   pixels_to_class = masque_roseliere == 2
   
   pxlpoints = rasterToPoints(pixels_to_class)
@@ -50,9 +40,6 @@ classify_simple_image = function(date, data_path, export, export_dir_raster, exp
   
   ind0 = which(masque_roseliere@data@values == 0)
   masque_roseliere[ind0] = NA
-  #summary(masque_roseliere_lambert93@data@values)
-  
-  #date = "20170707"
   
   
   
@@ -93,26 +80,7 @@ classify_simple_image = function(date, data_path, export, export_dir_raster, exp
   rouge = data$rouge
   pir = data$pir
   
-  ############## passage en l93 ##############
-  
-  #dvi_lambert93 = projectRaster(dvi, crs="+init=epsg:2154")
-  #gemi_lambert93 = projectRaster(gemi, crs="+init=epsg:2154")
-  #gndvi_lambert93 = projectRaster(gndvi, crs="+init=epsg:2154")
-  #kndvi_lambert93 = projectRaster(kndvi, crs="+init=epsg:2154")
-  #msavi_lambert93 = projectRaster(msavi, crs="+init=epsg:2154")
-  #msavi2_lambert93 = projectRaster(msavi2, crs="+init=epsg:2154")
-  #ndvi_lambert93 = projectRaster(ndvi, crs="+init=epsg:2154")
-  #ndwi_lambert93 = projectRaster(ndwi, crs="+init=epsg:2154")
-  #sr_lambert93 = projectRaster(sr, crs="+init=epsg:2154")
-  #ttvi_lambert93 = projectRaster(ttvi, crs="+init=epsg:2154")
-  #wdvi_lambert93 = projectRaster(wdvi, crs="+init=epsg:2154")
-  #raster::plot(wdvi_lambert93)
-  #raster::plot(lagune_elargie_lambert93, add = T)
-  #raster::plot(grand_bagnas_lambert93, add = T)
-  
-  
-  
-  #dvi_extract = raster::extract(dvi, grand_bagnas, cellnumber = T, df = T)
+
   bleu_extract = raster::extract(bleu, pxlpoints, cellnumber = T ,df = T)
   cell = bleu_extract$cell
   xy = raster::xyFromCell(bleu, cell = cell)
@@ -140,21 +108,15 @@ classify_simple_image = function(date, data_path, export, export_dir_raster, exp
   print(summary(part_dataset))
   image_data_all = part_dataset
   image_data_rf = image_data_all[-c(1:4)]
-  #image_data_rf = na.omit(image_data_rf)
-  #indinfsr = which(image_data_rf$sr == Inf)
-  #image_data_rf$sr[indinfsr] = NA
-  #where inf == max(sr)
-  #return(max(image_data_rf$sr[is.finite(image_data_rf$sr)]))
+
   
-  
-  #image_data_rf = na.roughfix(image_data_rf) # ANALYSE SANS NA's
-  #############RF
+  ############# RF
   
   p3pa <- predict(rfpa, image_data_rf)
   image_data_all$pre_abs = p3pa
   
   
-  ############raster reconstruction and plot
+  ############ raster reconstruction and plot
   
   xyzfile = image_data_all[, c(1,2,9)]
   xyzfile$pre_abs = ifelse(xyzfile$pre_abs=="pre", 1, 0)

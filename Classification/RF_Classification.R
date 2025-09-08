@@ -11,4 +11,3 @@ source(file = paste(getwd(),"/Classification/classify_simple_image_4bands_V2.R",
 ###### CLASS ALL FOLDER IMAGES ######
 source(file = paste(getwd(),"/Classification/classify_multi_images_4bands_V2.R", sep = ""), local = F, echo = F)
 
-summary(subset(datarf, datarf$date == 20170707))
